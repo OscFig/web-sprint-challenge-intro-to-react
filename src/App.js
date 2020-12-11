@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import CharacterList from './components/CharacterList'
+import axios from 'axios';
+import styled from 'styled-components'
 import './App.css';
 
-const App = () => {
-  // Try to think through what state you'll need for this app before starting. Then build out
-  // the state properties here.
+const Appstyle = styled.div`
+  max-width: 95%;
+`
+const Header = styled.h1`
+  font-size:3em;
+  font-family: 'Nerko One', cursive;
+`
 
-  // Fetch characters from the API in an effect hook. Remember, anytime you have a 
-  // side effect in a component, you want to think about which state and/or props it should
-  // sync up with, if any.
+const App = () => {
+ 
+  const [ characters, setCharacters ] = useState([])
+
+  useEffect(() => {
+    axios.get('https://rickandmortyapi.com/api/character')
+    .then(resolve => {
+      // console.log(resolve.data.results,'Resolve')
+      setCharacters(resolve.data.results)
+    })
+    .catch(err => {
+      alert('axios failed')
+    })
+  }, [])
 
   return (
-    <div className="App">
-      <h1 className="Header">Characters</h1>
-    </div>
+    <Appstyle className="App">
+      <Header className="Header">Characters</Header>
+      <CharacterList characters={characters}/>
+    </Appstyle>
   );
 }
 
